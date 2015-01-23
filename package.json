@@ -16,13 +16,15 @@
   },
   "devDependencies": {
     "browserify": "^8.1.1",
+    "element-class": "^0.2.0",
     "stack": "^0.1.0",
     "suitcss-preprocessor": "^0.4.0",
     "tape": "^3.4.0",
-    "virtual-dom-stringify": "^1.0.4"
+    "virtual-dom-stringify": "^1.0.4",
+    "zuul": "^1.16.5"
   },
   "scripts": {
-    "test": "./node_modules/.bin/tape ./test/*.spec.js ./test/*/*.spec.js"
+    "test": "zuul --local 8080 --open --ui tape -- ./test/*.spec.js"
   },
   "license": "MIT"
 }

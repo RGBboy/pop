@@ -1,0 +1,5 @@
+name: pop
+ui: tape
+browsers:
+  - name: chrome
+    version: 30..beta
