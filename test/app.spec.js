@@ -83,3 +83,19 @@ test('when state.view === play, app should return an app component with embedded
   document.body.removeChild(element);
 
 });
+
+test('when state.view === replay, app should return an app component with embedded replay component', function (t) {
+  var element,
+      replay;
+
+  t.plan(1);
+
+  element = createElement(app({ view: 'replay' }));
+  document.body.appendChild(element);
+
+  replay = element.querySelector('.Replay');
+  t.ok(replay, 'App has Replay component')
+
+  document.body.removeChild(element);
+
+});
