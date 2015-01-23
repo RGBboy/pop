@@ -23,9 +23,7 @@ test('play should be a function', function (t) {
 });
 
 test('play should return a play component', function (t) {
-  var element,
-  heading,
-  button;
+  var element;
 
   t.plan(1);
 
