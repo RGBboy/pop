@@ -67,3 +67,19 @@ test('when state.view === title, app should return an app component with embedde
   document.body.removeChild(element);
 
 });
+
+test('when state.view === play, app should return an app component with embedded play component', function (t) {
+  var element,
+      play;
+
+  t.plan(1);
+
+  element = createElement(app({ view: 'play' }));
+  document.body.appendChild(element);
+
+  play = element.querySelector('.Play');
+  t.ok(play, 'App has Play component')
+
+  document.body.removeChild(element);
+
+});
