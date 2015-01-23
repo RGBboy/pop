@@ -68,6 +68,22 @@ test('when state.view === title, app should return an app component with embedde
 
 });
 
+test('when state.view === countdown, app should return an app component with embedded countdown component', function (t) {
+  var element,
+      countdown;
+
+  t.plan(1);
+
+  element = createElement(app({ view: 'countdown' }));
+  document.body.appendChild(element);
+
+  countdown = element.querySelector('.Countdown');
+  t.ok(countdown, 'App has Countdown component')
+
+  document.body.removeChild(element);
+
+});
+
 test('when state.view === play, app should return an app component with embedded play component', function (t) {
   var element,
       play;
