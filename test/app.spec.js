@@ -23,15 +23,46 @@ test('app should be a function', function (t) {
 });
 
 test('app should return a app component', function (t) {
-  var element,
-  heading;
+  var element;
 
   t.plan(1);
 
-  element = createElement(app());
+  element = createElement(app({ view: 'loading' }));
   document.body.appendChild(element);
 
   t.ok(elementClass(element).has('App'), 'Component has class: App');
+
+  document.body.removeChild(element);
+
+});
+
+test('when state.view === loading, app should return an app component with embedded loading component', function (t) {
+  var element,
+      loading;
+
+  t.plan(1);
+
+  element = createElement(app({ view: 'loading' }));
+  document.body.appendChild(element);
+
+  loading = element.querySelector('.Loading');
+  t.ok(loading, 'App has Loading component')
+
+  document.body.removeChild(element);
+
+});
+
+test('when state.view === title, app should return an app component with embedded title component', function (t) {
+  var element,
+      title;
+
+  t.plan(1);
+
+  element = createElement(app({ view: 'title' }));
+  document.body.appendChild(element);
+
+  title = element.querySelector('.Title');
+  t.ok(title, 'App has Title component')
 
   document.body.removeChild(element);
 
