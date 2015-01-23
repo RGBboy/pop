@@ -1,0 +1,28 @@
+{
+  "name": "pop",
+  "version": "0.0.0",
+  "private": true,
+  "description": "",
+  "main": "index.js",
+  "author": "RGBboy <l-_-l@rgbboy.com>",
+  "dependencies": {
+    "domready": "^1.0.7",
+    "suitcss-base": "^0.8.0",
+    "suitcss-components-arrange": "^0.6.2",
+    "suitcss-utils-layout": "^0.4.2",
+    "suitcss-utils-text": "^0.4.2",
+    "vdom-virtualize": "0.0.6",
+    "virtual-dom": "^0.0.24"
+  },
+  "devDependencies": {
+    "browserify": "^8.1.1",
+    "stack": "^0.1.0",
+    "suitcss-preprocessor": "^0.4.0",
+    "tape": "^3.4.0",
+    "virtual-dom-stringify": "^1.0.4"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/tape ./test/*.spec.js ./test/*/*.spec.js"
+  },
+  "license": "MIT"
+}

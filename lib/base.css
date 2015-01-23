@@ -1,0 +1,98 @@
+/** Base; use strict */
+
+@import "suitcss-base";
+
+:root {
+  --text-color: #333;
+
+  --font-family-sans-serif:  "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-family-serif:       Georgia, "Times New Roman", Times, serif;
+  --font-family-monospace:   Menlo, Monaco, Consolas, "Courier New", monospace;
+  --font-family-base:        var(--font-family-sans-serif);
+
+  --font-size-base:          14px;
+  --font-size-large:         calc(var(--font-size-base) * 1.25);
+  --font-size-small:         calc(var(--font-size-base) * 0.85);
+
+  --font-size-h1:            calc(var(--font-size-base) * 2.6);
+  --font-size-h2:            calc(var(--font-size-base) * 2.15);
+  --font-size-h3:            calc(var(--font-size-base) * 1.7);
+  --font-size-h4:            calc(var(--font-size-base) * 1.25);
+  --font-size-h5:            var(--font-size-base);
+  --font-size-h6:            calc(var(--font-size-base) * 0.85);
+
+  /* Unit-less `line-height` for use in components like buttons.*/
+  --line-height-base:        1.428571429;
+  /* Computed "line-height" (`font-size` * `line-height`) for use with `margin`, `padding`, etc. */
+  --line-height-computed:    calc(var(--font-size-base) * var(--line-height-base));
+
+  /** By default, this inherits from the `<body>`. */
+  --headings-font-family:    inherit;
+  --headings-font-weight:    500;
+  --headings-line-height:    1.1;
+  --headings-color:          inherit;
+
+  --link-color:              #428bca;
+  --link-hover-color:        #23527c;
+  --link-hover-decoration:   underline;
+
+}
+
+/** Body reset */
+
+body {
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  color: var(--text-color);
+}
+
+/** Headings */
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: var(--headings-font-family);
+  font-weight: var(--headings-font-weight);
+  line-height: var(--headings-line-height);
+  color: var(--headings-color);
+}
+
+h1, .h1,
+h2, .h2,
+h3, .h3 {
+  margin-top: var(--line-height-computed);
+  margin-bottom: calc(var(--line-height-computed) / 2);
+}
+
+h4, .h4,
+h5, .h5,
+h6, .h6 {
+  margin-top: calc(var(--line-height-computed) / 2);
+  margin-bottom: calc(var(--line-height-computed) / 2);
+}
+
+h1, .h1 { font-size: var(--font-size-h1); }
+h2, .h2 { font-size: var(--font-size-h2); }
+h3, .h3 { font-size: var(--font-size-h3); }
+h4, .h4 { font-size: var(--font-size-h4); }
+h5, .h5 { font-size: var(--font-size-h5); }
+h6, .h6 { font-size: var(--font-size-h6); }
+
+/** Body text */
+
+p {
+  margin: 0 0 calc(var(--line-height-computed) / 2);
+}
+
+/** Links */
+
+a {
+  color: var(--link-color);
+  text-decoration: none;
+}
+
+a:hover,
+a:focus {
+  color: var(--link-hover-color);
+  text-decoration: var(--link-hover-decoration);
+}
