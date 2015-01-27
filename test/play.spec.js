@@ -58,3 +58,23 @@ test('play should show the seconds until game ends', function (t) {
   document.body.removeChild(element);
 
 });
+
+test('play should show the score', function (t) {
+  var element,
+      state,
+      score = 500,
+      scoreElement;
+
+  t.plan(1);
+
+  state = State({ score: score });
+  element = createElement(play(state));
+  document.body.appendChild(element);
+
+  scoreElement = element.querySelector('.Play-score');
+
+  t.equal(scoreElement.innerText, '' + score );
+
+  document.body.removeChild(element);
+
+});

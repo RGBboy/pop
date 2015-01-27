@@ -19,6 +19,8 @@ State = function (state) {
 
   state.playTime = state.playTime || 0;
 
+  state.score = state.score || 0;
+
   return state;
 
 };
