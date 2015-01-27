@@ -27,16 +27,21 @@ test('replay should be a function', function (t) {
 test('replay should return a replay component', function (t) {
   var element,
       state,
+      score = 500,
+      scoreElement,
       replayButton,
       menuButton;
 
-  t.plan(9);
+  t.plan(10);
 
-  state = State();
+  state = State({ score: score });
   element = createElement(replay(state));
   document.body.appendChild(element);
 
   t.ok(elementClass(element).has('Replay'), 'Component has class: Replay');
+
+  scoreElement = element.querySelector('.Replay-score');
+  t.equal(scoreElement.innerText, 'You scored ' + score + ' points!');
 
   replayButton = element.querySelector('.Replay-replay');
   t.ok(replayButton, 'Component has button');
