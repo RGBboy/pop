@@ -11,7 +11,8 @@ var test = require('tape'),
     app = require('../lib/app'),
     createElement = require('virtual-dom/create-element'),
     elementClass = require('element-class'),
-    document = global.document;
+    document = global.document,
+    State = require('./helpers/state');
 
 /**
 * app
@@ -23,11 +24,13 @@ test('app should be a function', function (t) {
 });
 
 test('app should return a app component', function (t) {
-  var element;
+  var element,
+      state;
 
   t.plan(1);
 
-  element = createElement(app({ view: 'loading' }));
+  state = State({ view: 'loading' });
+  element = createElement(app(state));
   document.body.appendChild(element);
 
   t.ok(elementClass(element).has('App'), 'Component has class: App');
@@ -38,11 +41,13 @@ test('app should return a app component', function (t) {
 
 test('when state.view === loading, app should return an app component with embedded loading component', function (t) {
   var element,
+      state,
       loading;
 
   t.plan(1);
 
-  element = createElement(app({ view: 'loading' }));
+  state = State({ view: 'loading' });
+  element = createElement(app(state));
   document.body.appendChild(element);
 
   loading = element.querySelector('.Loading');
@@ -54,11 +59,13 @@ test('when state.view === loading, app should return an app component with embed
 
 test('when state.view === title, app should return an app component with embedded title component', function (t) {
   var element,
+      state,
       title;
 
   t.plan(1);
 
-  element = createElement(app({ view: 'title' }));
+  state = State({ view: 'title' });
+  element = createElement(app(state));
   document.body.appendChild(element);
 
   title = element.querySelector('.Title');
@@ -70,11 +77,13 @@ test('when state.view === title, app should return an app component with embedde
 
 test('when state.view === countdown, app should return an app component with embedded countdown component', function (t) {
   var element,
+      state,
       countdown;
 
   t.plan(1);
 
-  element = createElement(app({ view: 'countdown' }));
+  state = State({ view: 'countdown' });
+  element = createElement(app(state));
   document.body.appendChild(element);
 
   countdown = element.querySelector('.Countdown');
@@ -86,11 +95,13 @@ test('when state.view === countdown, app should return an app component with emb
 
 test('when state.view === play, app should return an app component with embedded play component', function (t) {
   var element,
+      state,
       play;
 
   t.plan(1);
 
-  element = createElement(app({ view: 'play' }));
+  state = State({ view: 'play' });
+  element = createElement(app(state));
   document.body.appendChild(element);
 
   play = element.querySelector('.Play');
@@ -102,11 +113,13 @@ test('when state.view === play, app should return an app component with embedded
 
 test('when state.view === replay, app should return an app component with embedded replay component', function (t) {
   var element,
+      state,
       replay;
 
   t.plan(1);
 
-  element = createElement(app({ view: 'replay' }));
+  state = State({ view: 'replay' });
+  element = createElement(app(state));
   document.body.appendChild(element);
 
   replay = element.querySelector('.Replay');
