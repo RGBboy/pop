@@ -41,7 +41,7 @@ test('title should return a title component', function (t) {
   heading = element.querySelector('h1');
   t.ok(heading.innerText, 'Pop!');
 
-  button = element.querySelector('button');
+  button = element.querySelector('.Title-play');
   t.ok(button, 'Component has button');
   t.equal(button.innerText, 'Play');
   t.ok(elementClass(button).has('Button'), 'Button has class: Button');
@@ -68,7 +68,7 @@ test('when title button is clicked it should call state.updateView with countdow
   element = createElement(title(state));
   document.body.appendChild(element);
 
-  button = element.querySelector('button');
+  button = element.querySelector('.Title-play');
 
   button.dispatchEvent(event('click'));
 
