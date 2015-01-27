@@ -17,6 +17,8 @@ State = function (state) {
 
   state.countdownTime = state.countdownTime || 0;
 
+  state.playTime = state.playTime || 0;
+
   return state;
 
 };
