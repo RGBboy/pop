@@ -47,7 +47,7 @@ test('countdown should show the seconds until game starts', function (t) {
 
   t.plan(1);
 
-  state = State({ countdownTime: time });
+  state = State({ countdown: time });
   element = createElement(countdown(state));
   document.body.appendChild(element);
 

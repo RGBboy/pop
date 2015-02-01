@@ -15,9 +15,7 @@ State = function (state) {
   state = state || {};
   state.updateView = state.updateView || noop;
 
-  state.countdownTime = state.countdownTime || 0;
-
-  state.playTime = state.playTime || 0;
+  state.countdown = state.countdown || 0;
 
   state.score = state.score || 0;
 
