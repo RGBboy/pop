@@ -112,6 +112,29 @@ test('countdownStream should end when value less than 0', function (t) {
 
 });
 
+test('countdownStream should emit 0 before it ends', function (t) {
+  var countdownStream,
+      deltaStream,
+      delta = 2050,
+      time = 2000;
+
+  t.plan(2);
+
+  deltaStream = Kefir.emitter();
+  countdownStream = CountdownStream(deltaStream, time);
+
+  countdownStream.skip(1).take(1).onValue(function (value) {
+    t.equal(value, 0);
+  });
+
+  countdownStream.onEnd(function () {
+    t.pass('Stream ended');
+  });
+
+  deltaStream.emit(delta);
+
+});
+
 test('countdownStream should end when deltaStream ends', function (t) {
   var countdownStream,
       deltaStream,
