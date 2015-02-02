@@ -19,6 +19,8 @@ State = function (state) {
 
   state.score = state.score || 0;
 
+  state.bubbles = [];
+
   return state;
 
 };
