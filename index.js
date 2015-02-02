@@ -48,12 +48,14 @@ var http = require('http'),
         next();
       };
     },
+    ecstatic = require('ecstatic')(__dirname + '/public'),
     stack = require('stack'),
     server = http.createServer(
       stack(
         page,
         script,
-        style
+        style,
+        ecstatic
       )
     );
 

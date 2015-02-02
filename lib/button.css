@@ -1,0 +1,22 @@
+/** use strict */
+
+@import "suitcss-components-button";
+
+/**
+ * Modifier: default buttons
+ */
+
+.Button--default {
+  color: #33AAFF;
+  background: #FFFFFF;
+  border-radius: 16px;
+}
+
+.Button--default:hover,
+.Button--default:focus,
+.Button--default:active,
+.Button--default.is-pressed {
+  color: #0088FF;
+  outline: 0px;
+  box-shadow: 0px 3px 5px #0088FF;
+}

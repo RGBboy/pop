@@ -9,13 +9,15 @@
     "domready": "^1.0.7",
     "suitcss-base": "^0.8.0",
     "suitcss-components-arrange": "^0.6.2",
-    "suitcss-utils-layout": "^0.4.2",
+    "suitcss-components-button": "^4.0.0",
+    "suitcss-utils-position": "^0.2.2",
     "suitcss-utils-text": "^0.4.2",
     "vdom-virtualize": "0.0.6",
     "virtual-dom": "^0.0.24"
   },
   "devDependencies": {
     "browserify": "^8.1.1",
+    "ecstatic": "^0.5.8",
     "element-class": "^0.2.0",
     "smokestack": "^3.2.0",
     "stack": "^0.1.0",
