@@ -26,7 +26,8 @@ test('PopStream should return a Kefir Stream', function (t) {
   var popStream,
       bubbleStream,
       deltaStream,
-      inputStream;
+      inputStream,
+      time = 1000;
 
   t.plan(1);
 
@@ -34,7 +35,7 @@ test('PopStream should return a Kefir Stream', function (t) {
   deltaStream = Kefir.emitter();
   inputStream = Kefir.emitter();
 
-  popStream = PopStream(bubbleStream, deltaStream, inputStream);
+  popStream = PopStream(bubbleStream, deltaStream, inputStream, time);
 
   t.ok(popStream instanceof Kefir.Stream, 'instance is Kefir Stream');
 
@@ -46,7 +47,7 @@ test('popStream should emit a state', function (t) {
       bubbleStream,
       deltaStream,
       inputStream,
-      time = 10000,
+      time = 1000,
       delta = 50;
 
   t.plan(3);
@@ -74,6 +75,7 @@ test('popStream should emit state with moved bubbles', function (t) {
       bubbleStream,
       deltaStream,
       inputStream,
+      time = 1000,
       bubble,
       bubbleX,
       bubbleY;
@@ -84,7 +86,7 @@ test('popStream should emit state with moved bubbles', function (t) {
   deltaStream = Kefir.emitter();
   inputStream = Kefir.emitter();
 
-  popStream = PopStream(bubbleStream, deltaStream, inputStream);
+  popStream = PopStream(bubbleStream, deltaStream, inputStream, time);
 
   bubble = Bubble.createBubble(0);
 
@@ -107,6 +109,7 @@ test('popStream should move popped bubbles off screen', function (t) {
       bubbleStream,
       deltaStream,
       inputStream,
+      time = 1000,
       bubbles;
 
   t.plan(1);
@@ -115,12 +118,13 @@ test('popStream should move popped bubbles off screen', function (t) {
   deltaStream = Kefir.emitter();
   inputStream = Kefir.emitter();
 
-  popStream = PopStream(bubbleStream, deltaStream, inputStream);
+  popStream = PopStream(bubbleStream, deltaStream, inputStream, time);
 
   bubbles = [Bubble.createBubble(0)];
 
   bubbles[0].x = 50;
   bubbles[0].y = 50;
+  bubbles[0].speed = 1;
   bubbles[0].radius = 10;
 
   popStream.take(1).onValue(function (v) {
@@ -128,7 +132,7 @@ test('popStream should move popped bubbles off screen', function (t) {
   });
 
   bubbleStream.emit(bubbles);
-  inputStream.emit([50, 50])
+  inputStream.emit([50, 50]);
   deltaStream.emit(50);
 
 });
@@ -139,6 +143,7 @@ test('popStream should emit state with correct score', function (t) {
       bubbleStream,
       deltaStream,
       inputStream,
+      time = 1000,
       bubbles;
 
   t.plan(1);
@@ -147,7 +152,7 @@ test('popStream should emit state with correct score', function (t) {
   deltaStream = Kefir.emitter();
   inputStream = Kefir.emitter();
 
-  popStream = PopStream(bubbleStream, deltaStream, inputStream);
+  popStream = PopStream(bubbleStream, deltaStream, inputStream, time);
 
   bubbles = [Bubble.createBubble(0), Bubble.createBubble(1), Bubble.createBubble(2)];
 
@@ -170,5 +175,34 @@ test('popStream should emit state with correct score', function (t) {
   bubbleStream.emit(bubbles);
   inputStream.emit([0, 0])
   deltaStream.emit(50);
+
+});
+
+test('popStream should end when time is up', function (t) {
+
+  var popStream,
+      bubbleStream,
+      deltaStream,
+      inputStream,
+      time = 1000,
+      bubbles;
+
+  t.plan(1);
+
+  bubbleStream = Kefir.emitter();
+  deltaStream = Kefir.emitter();
+  inputStream = Kefir.emitter();
+
+  popStream = PopStream(bubbleStream, deltaStream, inputStream, time);
+
+  bubbles = [];
+
+  popStream.onEnd(function (v) {
+    t.pass('stream ended');
+  });
+
+  bubbleStream.emit(bubbles);
+  deltaStream.emit(500);
+  deltaStream.emit(500);
 
 });
