@@ -3,6 +3,7 @@
 @import "suitcss-utils-position";
 @import "suitcss-components-arrange";
 @import "suitcss-utils-text";
+@import "../play";
 
 .App {
   width: 320px;

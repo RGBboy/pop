@@ -1,0 +1,27 @@
+/** @define Play; use strict */
+
+@import "suitcss-utils-text";
+
+.Play {
+  background: #33AAFF;
+  width: 100%;
+  height: 100%;
+}
+
+.Play-time {
+  position: absolute;
+  top: 0px;
+  width: 100%;
+}
+
+.Play-score {
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+}
+
+.Play-canvas {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
