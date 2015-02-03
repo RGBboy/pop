@@ -9,6 +9,7 @@
 
 var http = require('http'),
     fs = require('fs'),
+    zlib = require('zlib'),
     html = require('./lib/html'),
     page = function (req, res, next) {
       if (req.url === '/') {
@@ -22,9 +23,13 @@ var http = require('http'),
     browserify = require('browserify'),
     script = function (req, res, next) {
       if (req.url === '/index.js') {
+        var gzip = zlib.createGzip();
         res.setHeader('Content-Type', 'text/javascript');
+        res.setHeader('Content-Encoding', 'gzip');
         browserify([__dirname + '/lib/client'])
+          .transform({ global: true }, 'uglifyify')
           .bundle()
+          .pipe(gzip)
           .pipe(res);
       } else {
         next();

@@ -26,6 +26,7 @@
     "synthetic-dom-events": "^0.2.2",
     "tap-closer": "^1.0.0",
     "tape": "^3.4.0",
+    "uglifyify": "^3.0.1"
   },
   "scripts": {
     "test": "browserify ./test/*.spec.js | tap-closer | smokestack"
