@@ -8,9 +8,10 @@
 */
 
 var test = require('tape'),
-    play = require('../lib/play'),
-    createElement = require('virtual-dom/create-element'),
+    React = require('react/addons'),
+    TestUtils = React.addons.TestUtils,
     elementClass = require('element-class'),
+    Play = require('../lib/play'),
     document = global.document,
     State = require('./helpers/state');
 
@@ -18,29 +19,29 @@ var test = require('tape'),
 * play
 */
 
-test('play should be a function', function (t) {
+test('Play should be a React Class', function (t) {
+  var play;
   t.plan(1);
-  t.equal(typeof play, 'function');
+  play = React.createElement(Play, null);
+  t.ok(TestUtils.isElementOfType(play, Play), 'Component is a Play Component')
 });
 
-test('play should return a play component', function (t) {
-  var element,
+test('play should have correct markup', function (t) {
+  var play,
       state;
 
   t.plan(1);
 
   state = State();
-  element = createElement(play(state));
-  document.body.appendChild(element);
 
-  t.ok(elementClass(element).has('Play'), 'Component has class: Play');
+  play = TestUtils.renderIntoDocument(React.createElement(Play, state), document);
+  t.ok(elementClass(play.getDOMNode()).has('Play'), 'Component has class: Play');
 
-  document.body.removeChild(element);
-
+  React.unmountComponentAtNode(document);
 });
 
 test('play should show the seconds until game ends', function (t) {
-  var element,
+  var play,
       state,
       time = 2000,
       counter;
@@ -48,19 +49,17 @@ test('play should show the seconds until game ends', function (t) {
   t.plan(1);
 
   state = State({ countdown: time });
-  element = createElement(play(state));
-  document.body.appendChild(element);
 
-  counter = element.querySelector('.Play-time');
+  play = TestUtils.renderIntoDocument(React.createElement(Play, state), document);
 
-  t.equal(counter.innerText, '' + (time / 1000) );
+  counter = TestUtils.findRenderedDOMComponentWithClass(play, 'Play-time');
+  t.equal(counter.getDOMNode().innerText, '' + (time / 1000) );
 
-  document.body.removeChild(element);
-
+  React.unmountComponentAtNode(document);
 });
 
-test('play should show the score', function (t) {
-  var element,
+test('play should show the seconds until game ends', function (t) {
+  var play,
       state,
       score = 500,
       scoreElement;
@@ -68,13 +67,11 @@ test('play should show the score', function (t) {
   t.plan(1);
 
   state = State({ score: score });
-  element = createElement(play(state));
-  document.body.appendChild(element);
 
-  scoreElement = element.querySelector('.Play-score');
+  play = TestUtils.renderIntoDocument(React.createElement(Play, state), document);
 
-  t.equal(scoreElement.innerText, '' + score );
+  scoreElement = TestUtils.findRenderedDOMComponentWithClass(play, 'Play-score');
+  t.equal(scoreElement.getDOMNode().innerText, '' + score );
 
-  document.body.removeChild(element);
-
+  React.unmountComponentAtNode(document);
 });

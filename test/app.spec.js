@@ -8,9 +8,15 @@
 */
 
 var test = require('tape'),
-    app = require('../lib/app'),
-    createElement = require('virtual-dom/create-element'),
+    React = require('react/addons'),
+    TestUtils = React.addons.TestUtils,
     elementClass = require('element-class'),
+    App = require('../lib/app'),
+    Loading = require('../lib/loading'),
+    Title = require('../lib/title'),
+    Countdown = require('../lib/countdown'),
+    Play = require('../lib/play'),
+    Replay = require('../lib/replay'),
     document = global.document,
     State = require('./helpers/state');
 
@@ -18,113 +24,102 @@ var test = require('tape'),
 * app
 */
 
-test('app should be a function', function (t) {
+test('App should be a React Class', function (t) {
+  var app;
   t.plan(1);
-  t.equal(typeof app, 'function');
+  app = React.createElement(App, null);
+  t.ok(TestUtils.isElementOfType(app, App), 'Component is a App Component');
 });
 
 test('app should return a app component', function (t) {
-  var element,
+  var app,
       state;
 
   t.plan(1);
 
   state = State({ view: 'loading' });
-  element = createElement(app(state));
-  document.body.appendChild(element);
+  app = TestUtils.renderIntoDocument(React.createElement(App, state), document);
+  t.ok(elementClass(app.getDOMNode()).has('App'), 'Component has class: App');
 
-  t.ok(elementClass(element).has('App'), 'Component has class: App');
-
-  document.body.removeChild(element);
-
+  React.unmountComponentAtNode(document);
 });
 
 test('when state.view === loading, app should return an app component with embedded loading component', function (t) {
-  var element,
+  var app,
       state,
       loading;
 
   t.plan(1);
 
   state = State({ view: 'loading' });
-  element = createElement(app(state));
-  document.body.appendChild(element);
+  app = TestUtils.renderIntoDocument(React.createElement(App, state), document);
 
-  loading = element.querySelector('.Loading');
+  loading = TestUtils.findRenderedComponentWithType(app, Loading);
   t.ok(loading, 'App has Loading component')
 
-  document.body.removeChild(element);
-
+  React.unmountComponentAtNode(document);
 });
 
 test('when state.view === title, app should return an app component with embedded title component', function (t) {
-  var element,
+  var app,
       state,
       title;
 
   t.plan(1);
 
   state = State({ view: 'title' });
-  element = createElement(app(state));
-  document.body.appendChild(element);
+  app = TestUtils.renderIntoDocument(React.createElement(App, state), document);
 
-  title = element.querySelector('.Title');
+  title = TestUtils.findRenderedComponentWithType(app, Title);
   t.ok(title, 'App has Title component')
 
-  document.body.removeChild(element);
-
+  React.unmountComponentAtNode(document);
 });
 
 test('when state.view === countdown, app should return an app component with embedded countdown component', function (t) {
-  var element,
+  var app,
       state,
       countdown;
 
   t.plan(1);
 
   state = State({ view: 'countdown' });
-  element = createElement(app(state));
-  document.body.appendChild(element);
+  app = TestUtils.renderIntoDocument(React.createElement(App, state), document);
 
-  countdown = element.querySelector('.Countdown');
+  countdown = TestUtils.findRenderedComponentWithType(app, Countdown);
   t.ok(countdown, 'App has Countdown component')
 
-  document.body.removeChild(element);
-
+  React.unmountComponentAtNode(document);
 });
 
 test('when state.view === play, app should return an app component with embedded play component', function (t) {
-  var element,
+  var app,
       state,
       play;
 
   t.plan(1);
 
   state = State({ view: 'play' });
-  element = createElement(app(state));
-  document.body.appendChild(element);
+  app = TestUtils.renderIntoDocument(React.createElement(App, state), document);
 
-  play = element.querySelector('.Play');
+  play = TestUtils.findRenderedComponentWithType(app, Play);
   t.ok(play, 'App has Play component')
 
-  document.body.removeChild(element);
-
+  React.unmountComponentAtNode(document);
 });
 
 test('when state.view === replay, app should return an app component with embedded replay component', function (t) {
-  var element,
+  var app,
       state,
       replay;
 
   t.plan(1);
 
   state = State({ view: 'replay' });
-  element = createElement(app(state));
-  document.body.appendChild(element);
+  app = TestUtils.renderIntoDocument(React.createElement(App, state), document);
 
-  replay = element.querySelector('.Replay');
+  replay = TestUtils.findRenderedComponentWithType(app, Replay);
   t.ok(replay, 'App has Replay component')
 
-  document.body.removeChild(element);
-
+  React.unmountComponentAtNode(document);
 });

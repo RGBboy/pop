@@ -8,10 +8,10 @@
 */
 
 var test = require('tape'),
-    title = require('../lib/title'),
-    createElement = require('virtual-dom/create-element'),
+    React = require('react/addons'),
+    TestUtils = React.addons.TestUtils,
     elementClass = require('element-class'),
-    event = require('synthetic-dom-events'),
+    Title = require('../lib/title'),
     document = global.document,
     State = require('./helpers/state');
 
@@ -19,13 +19,15 @@ var test = require('tape'),
 * title
 */
 
-test('title should be a function', function (t) {
+test('Title should be a React Class', function (t) {
+  var title;
   t.plan(1);
-  t.equal(typeof title, 'function');
+  title = React.createElement(Title, null);
+  t.ok(TestUtils.isElementOfType(title, Title), 'Component is a Title Component');
 });
 
-test('title should return a title component', function (t) {
-  var element,
+test('title should have correct markup', function (t) {
+  var title,
       state,
       heading,
       button;
@@ -33,26 +35,24 @@ test('title should return a title component', function (t) {
   t.plan(6);
 
   state = State();
-  element = createElement(title(state));
-  document.body.appendChild(element);
 
-  t.ok(elementClass(element).has('Title'), 'Component has class: Title');
+  title = TestUtils.renderIntoDocument(React.createElement(Title, state), document);
+  t.ok(elementClass(title.getDOMNode()).has('Title'), 'Component has class: Title');
 
-  heading = element.querySelector('h1');
-  t.ok(heading.innerText, 'Pop!');
+  heading = TestUtils.findRenderedDOMComponentWithTag(title, 'h1');
+  t.ok(heading.getDOMNode().innerText, 'Pop!');
 
-  button = element.querySelector('.Title-play');
+  button = TestUtils.findRenderedDOMComponentWithClass(title, 'Title-play');
   t.ok(button, 'Component has button');
-  t.equal(button.innerText, 'Play');
-  t.ok(elementClass(button).has('Button'), 'Button has class: Button');
-  t.ok(elementClass(button).has('Button--default'), 'Button has class: Button--default');
+  t.equal(button.getDOMNode().innerText, 'Play');
+  t.ok(elementClass(button.getDOMNode()).has('Button'), 'Button has class: Button');
+  t.ok(elementClass(button.getDOMNode()).has('Button--default'), 'Button has class: Button--default');
 
-  document.body.removeChild(element);
-
+  React.unmountComponentAtNode(document);
 });
 
 test('when title button is clicked it should call state.updateView with countdown', function (t) {
-  var element,
+  var title,
       state,
       button,
       updateView;
@@ -61,15 +61,13 @@ test('when title button is clicked it should call state.updateView with countdow
 
   updateView = function (view) {
     t.equal(view, 'countdown');
-    document.body.removeChild(element);
+    React.unmountComponentAtNode(document);
   };
 
   state = State({ updateView: updateView });
-  element = createElement(title(state));
-  document.body.appendChild(element);
+  title = TestUtils.renderIntoDocument(React.createElement(Title, state), document);
 
-  button = element.querySelector('.Title-play');
+  button = TestUtils.findRenderedDOMComponentWithClass(title, 'Title-play');
 
-  button.dispatchEvent(event('click'));
-
+  TestUtils.Simulate.click(button.getDOMNode());
 });

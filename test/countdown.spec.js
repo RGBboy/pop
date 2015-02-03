@@ -8,9 +8,10 @@
 */
 
 var test = require('tape'),
-    countdown = require('../lib/countdown'),
-    createElement = require('virtual-dom/create-element'),
+    React = require('react/addons'),
+    TestUtils = React.addons.TestUtils,
     elementClass = require('element-class'),
+    Countdown = require('../lib/countdown'),
     document = global.document,
     State = require('./helpers/state');
 
@@ -18,29 +19,29 @@ var test = require('tape'),
 * countdown
 */
 
-test('countdown should be a function', function (t) {
+test('Countdown should be a React Class', function (t) {
+  var countdown;
   t.plan(1);
-  t.equal(typeof countdown, 'function');
+  countdown = React.createElement(Countdown, null);
+  t.ok(TestUtils.isElementOfType(countdown, Countdown), 'Component is a Countdown Component')
 });
 
-test('countdown should return a countdown component', function (t) {
-  var element,
+test('countdown should have correct markup', function (t) {
+  var countdown,
       state;
 
   t.plan(1);
 
   state = State();
-  element = createElement(countdown(state));
-  document.body.appendChild(element);
 
-  t.ok(elementClass(element).has('Countdown'), 'Component has class: Countdown');
+  countdown = TestUtils.renderIntoDocument(React.createElement(Countdown, state), document);
+  t.ok(elementClass(countdown.getDOMNode()).has('Countdown'), 'Component has class: Countdown');
 
-  document.body.removeChild(element);
-
+  React.unmountComponentAtNode(document);
 });
 
 test('countdown should show the seconds until game starts', function (t) {
-  var element,
+  var countdown,
       state,
       time = 2000,
       counter;
@@ -48,13 +49,11 @@ test('countdown should show the seconds until game starts', function (t) {
   t.plan(1);
 
   state = State({ countdown: time });
-  element = createElement(countdown(state));
-  document.body.appendChild(element);
 
-  counter = element.querySelector('.Countdown-time');
+  countdown = TestUtils.renderIntoDocument(React.createElement(Countdown, state), document);
 
-  t.equal(counter.innerText, '' + (time / 1000) );
+  counter = TestUtils.findRenderedDOMComponentWithClass(countdown, 'Countdown-time');
+  t.equal(counter.getDOMNode().innerText, '' + (time / 1000) );
 
-  document.body.removeChild(element);
-
+  React.unmountComponentAtNode(document);
 });

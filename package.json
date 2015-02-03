@@ -9,13 +9,12 @@
     "domready": "^1.0.7",
     "kefir": "^1.0.0",
     "raf": "^2.0.4",
+    "react": "^0.12.2",
     "suitcss-base": "^0.8.0",
     "suitcss-components-arrange": "^0.6.2",
     "suitcss-components-button": "^4.0.0",
     "suitcss-utils-position": "^0.2.2",
-    "suitcss-utils-text": "^0.4.2",
-    "vdom-virtualize": "0.0.6",
-    "virtual-dom": "^0.0.24"
+    "suitcss-utils-text": "^0.4.2"
   },
   "devDependencies": {
     "browserify": "^8.1.1",
@@ -27,7 +26,6 @@
     "synthetic-dom-events": "^0.2.2",
     "tap-closer": "^1.0.0",
     "tape": "^3.4.0",
-    "virtual-dom-stringify": "^1.0.4"
   },
   "scripts": {
     "test": "browserify ./test/*.spec.js | tap-closer | smokestack"

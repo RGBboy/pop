@@ -8,10 +8,10 @@
 */
 
 var test = require('tape'),
-    replay = require('../lib/replay'),
-    createElement = require('virtual-dom/create-element'),
+    React = require('react/addons'),
+    TestUtils = React.addons.TestUtils,
     elementClass = require('element-class'),
-    event = require('synthetic-dom-events'),
+    Replay = require('../lib/replay'),
     document = global.document,
     State = require('./helpers/state');
 
@@ -19,13 +19,15 @@ var test = require('tape'),
 * replay
 */
 
-test('replay should be a function', function (t) {
+test('Replay should be a React Class', function (t) {
+  var replay;
   t.plan(1);
-  t.equal(typeof replay, 'function');
+  replay = React.createElement(Replay, null);
+  t.ok(TestUtils.isElementOfType(replay, Replay), 'Component is a Replay Component');
 });
 
-test('replay should return a replay component', function (t) {
-  var element,
+test('replay should have correct markup', function (t) {
+  var replay,
       state,
       score = 500,
       scoreElement,
@@ -35,32 +37,30 @@ test('replay should return a replay component', function (t) {
   t.plan(10);
 
   state = State({ score: score });
-  element = createElement(replay(state));
-  document.body.appendChild(element);
+  replay = TestUtils.renderIntoDocument(React.createElement(Replay, state), document);
+  t.ok(elementClass(replay.getDOMNode()).has('Replay'), 'Component has class: Replay');
 
-  t.ok(elementClass(element).has('Replay'), 'Component has class: Replay');
+  scoreElement = TestUtils.findRenderedDOMComponentWithClass(replay, 'Replay-score');
+  t.equal(scoreElement.getDOMNode().innerText, 'You scored ' + score + ' points!');
 
-  scoreElement = element.querySelector('.Replay-score');
-  t.equal(scoreElement.innerText, 'You scored ' + score + ' points!');
-
-  replayButton = element.querySelector('.Replay-replay');
+  replayButton = TestUtils.findRenderedDOMComponentWithClass(replay, 'Replay-replay');
   t.ok(replayButton, 'Component has button');
-  t.equal(replayButton.innerText, 'Replay');
-  t.ok(elementClass(replayButton).has('Button'), 'Button has class: Button');
-  t.ok(elementClass(replayButton).has('Button--default'), 'Button has class: Button--default');
+  t.equal(replayButton.getDOMNode().innerText, 'Replay');
+  t.ok(elementClass(replayButton.getDOMNode()).has('Button'), 'Button has class: Button');
+  t.ok(elementClass(replayButton.getDOMNode()).has('Button--default'), 'Button has class: Button--default');
 
-  menuButton = element.querySelector('.Replay-menu');
+  menuButton = TestUtils.findRenderedDOMComponentWithClass(replay, 'Replay-menu');
   t.ok(menuButton, 'Component has button');
-  t.equal(menuButton.innerText, 'Menu');
-  t.ok(elementClass(menuButton).has('Button'), 'Button has class: Button');
-  t.ok(elementClass(menuButton).has('Button--default'), 'Button has class: Button--default');
+  t.equal(menuButton.getDOMNode().innerText, 'Menu');
+  t.ok(elementClass(menuButton.getDOMNode()).has('Button'), 'Button has class: Button');
+  t.ok(elementClass(menuButton.getDOMNode()).has('Button--default'), 'Button has class: Button--default');
 
-  document.body.removeChild(element);
+  React.unmountComponentAtNode(document);
 
 });
 
 test('when replay button is clicked it should call state.updateView with countdown', function (t) {
-  var element,
+  var replay,
       state,
       button,
       updateView;
@@ -69,21 +69,20 @@ test('when replay button is clicked it should call state.updateView with countdo
 
   updateView = function (view, e) {
     t.equal(view, 'countdown');
-    document.body.removeChild(element);
+    React.unmountComponentAtNode(document);
   };
 
   state = State({ updateView: updateView });
-  element = createElement(replay(state));
-  document.body.appendChild(element);
+  replay = TestUtils.renderIntoDocument(React.createElement(Replay, state), document);
 
-  button = element.querySelector('.Replay-replay');
+  button = TestUtils.findRenderedDOMComponentWithClass(replay, 'Replay-replay');
 
-  button.dispatchEvent(event('click'));
+  TestUtils.Simulate.click(button.getDOMNode());
 
 });
 
 test('when menu button is clicked it should call state.updateView with title', function (t) {
-  var element,
+  var replay,
       state,
       button,
       updateView;
@@ -92,15 +91,14 @@ test('when menu button is clicked it should call state.updateView with title', f
 
   updateView = function (view, e) {
     t.equal(view, 'title');
-    document.body.removeChild(element);
+    React.unmountComponentAtNode(document);
   };
 
   state = State({ updateView: updateView });
-  element = createElement(replay(state));
-  document.body.appendChild(element);
+  replay = TestUtils.renderIntoDocument(React.createElement(Replay, state), document);
 
-  button = element.querySelector('.Replay-menu');
+  button = TestUtils.findRenderedDOMComponentWithClass(replay, 'Replay-menu');
 
-  button.dispatchEvent(event('click'));
+  TestUtils.Simulate.click(button.getDOMNode());
 
 });

@@ -8,34 +8,34 @@
 */
 
 var test = require('tape'),
-    loading = require('../lib/loading'),
-    createElement = require('virtual-dom/create-element'),
+    React = require('react/addons'),
+    TestUtils = React.addons.TestUtils,
     elementClass = require('element-class'),
+    Loading = require('../lib/loading'),
     document = global.document;
 
 /**
-* loading
+* Loading
 */
 
-test('loading should be a function', function (t) {
+test('Loading should be a React Class', function (t) {
+  var loading;
   t.plan(1);
-  t.equal(typeof loading, 'function');
+  loading = React.createElement(Loading, null);
+  t.ok(TestUtils.isElementOfType(loading, Loading), 'Component is a Loading Component')
 });
 
-test('loading should return a loading component', function (t) {
-  var element,
+test('loading should have correct markup', function (t) {
+  var loading,
       heading;
 
   t.plan(2);
 
-  element = createElement(loading());
-  document.body.appendChild(element);
+  loading = TestUtils.renderIntoDocument(React.createElement(Loading, null), document);
+  t.ok(elementClass(loading.getDOMNode()).has('Loading'), 'Component has class: Loading');
 
-  t.ok(elementClass(element).has('Loading'), 'Component has class: Loading');
+  heading = TestUtils.findRenderedDOMComponentWithTag(loading, 'h3');
+  t.equal(heading.getDOMNode().innerText, 'Loading...');
 
-  heading = element.querySelector('h3');
-  t.ok(heading.innerText, 'Loading...');
-
-  document.body.removeChild(element);
-
+  React.unmountComponentAtNode(document);
 });
