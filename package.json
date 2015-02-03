@@ -7,6 +7,8 @@
   "author": "RGBboy <l-_-l@rgbboy.com>",
   "dependencies": {
     "domready": "^1.0.7",
+    "kefir": "^1.0.0",
+    "raf": "^2.0.4",
     "suitcss-base": "^0.8.0",
     "suitcss-components-arrange": "^0.6.2",
     "suitcss-components-button": "^4.0.0",
