@@ -18,14 +18,21 @@
   },
   "devDependencies": {
     "browserify": "^8.1.1",
+    "del": "^1.1.1",
     "ecstatic": "^0.5.8",
     "element-class": "^0.2.0",
+    "gulp": "^3.8.10",
+    "gulp-file": "^0.2.0",
+    "gulp-rename": "^1.2.0",
+    "gulp-serve": "^0.3.0",
+    "run-sequence": "^1.0.2",
     "smokestack": "^3.2.0",
     "stack": "^0.1.0",
     "suitcss-preprocessor": "^0.4.0",
     "synthetic-dom-events": "^0.2.2",
     "tap-closer": "^1.0.0",
     "tape": "^3.4.0",
+    "through2": "^0.6.3",
     "uglifyify": "^3.0.1"
   },
   "scripts": {
