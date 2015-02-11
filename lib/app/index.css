@@ -23,23 +23,23 @@
 }
 
 .App-animation-enter {
-  top:-100%;
+  transform: translateY(-100%);
   opacity: 0.01;
   transition: all .5s cubic-bezier(1.000, -0.530, 0.405, 1.425);
 }
 
 .App-animation-enter.App-animation-enter-active {
-  top:0%;
+  transform: translateY(0);
   opacity: 1;
 }
 
 .App-animation-leave {
-  bottom:0%;
+  transform: translateY(0);
   opacity: 1;
   transition: all .5s cubic-bezier(1.000, -0.530, 0.405, 1.425);
 }
 
 .App-animation-leave.App-animation-leave-active {
-  bottom:-100%;
+  transform: translateY(100%);
   opacity: 0.01;
 }
