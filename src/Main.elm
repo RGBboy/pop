@@ -5,6 +5,7 @@ import Html as H exposing (Html)
 import Html.Attributes as A
 import Html.Events as E
 import Html.Keyed as K
+import Task exposing (Task)
 import Time exposing (Time)
 
 
@@ -22,11 +23,11 @@ type alias Model =
   { view : View
   }
 
-init : (Model, Cmd msg)
+init : (Model, Cmd Msg)
 init =
   ( { view = Loading
     }
-  , Cmd.none
+  , Task.perform identity (Task.succeed (UpdateView Title))
   )
 
 initCountdown : View
@@ -107,11 +108,10 @@ buttonGroup buttons =
   List.intersperse (H.text " ") buttons
     |> H.div [ A.class "u-textCenter" ]
 
-loading : Html Msg
+loading : Html msg
 loading =
   H.div [ A.class "Loading" ]
     [ H.h3 [ A.class "u-textCenter" ] [ H.text "Loading..." ]
-    , buttonGroup [ button (UpdateView Title) "Next" ]
     ]
 
 title : Html Msg
@@ -121,7 +121,7 @@ title =
     , buttonGroup [ button (UpdateView initCountdown) "Play" ]
     ]
 
-countdown : Time -> Html Msg
+countdown : Time -> Html msg
 countdown timeLeft =
   let
     time = timeLeft / 1000 |> ceiling |> toString
