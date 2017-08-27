@@ -23,6 +23,7 @@
     "ecstatic": "^1.4.0",
     "element-class": "^0.2.0",
     "elm": "^0.18.0",
+    "fs-path": "0.0.23",
     "gulp": "^3.8.10",
     "gulp-file": "^0.2.0",
     "gulp-rename": "^1.2.0",
@@ -36,6 +37,7 @@
   "scripts": {
     "start": "ecstatic ./build --port 8080",
     "build": "elm-make ./src/Main.elm --output ./build/index.js",
+    "build:html": "elm-make ./src/Build.elm --output /tmp/elm.js && node build /tmp/elm.js",
     "dev": "chokidar 'src/*.elm' -c 'npm run build'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
