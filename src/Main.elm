@@ -73,7 +73,6 @@ subscriptions model =
 
 
 
-
 -- VIEW
 
 viewToString : View -> String
