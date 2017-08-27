@@ -1,9 +1,11 @@
 module Main exposing (..)
 
+import AnimationFrame
 import Html as H exposing (Html)
 import Html.Attributes as A
 import Html.Events as E
 import Html.Keyed as K
+import Time exposing (Time)
 
 
 
@@ -12,7 +14,7 @@ import Html.Keyed as K
 type View
   = Loading
   | Title
-  | Countdown
+  | Countdown Time
   | Play
   | Replay
 
@@ -27,18 +29,39 @@ init =
   , Cmd.none
   )
 
+initCountdown : View
+initCountdown = Countdown (3 * Time.second)
+
 
 
 -- UPDATE
 
-type alias Msg
-  = View
+type Msg
+  = UpdateView View
+  | Tick Time
 
 update : Msg -> Model -> (Model, Cmd msg)
-update view model =
-  ( { model | view = view }
-  , Cmd.none
-  )
+update message model =
+  case message of
+    UpdateView view ->
+      ( { model | view = view }
+      , Cmd.none
+      )
+    Tick delta ->
+      case model.view of
+        Countdown timeleft ->
+          let
+            time = timeleft - delta
+            view =
+              if time > 0 then
+                Countdown time
+              else
+                Play
+          in
+            ( { model | view = view}
+            , Cmd.none
+            )
+        _ -> (model, Cmd.none)
 
 
 
@@ -46,7 +69,7 @@ update view model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-  Sub.none
+  AnimationFrame.diffs Tick
 
 
 
@@ -58,7 +81,7 @@ viewToString view =
   case view of
     Loading -> "Loading"
     Title -> "Title"
-    Countdown -> "Countdown"
+    Countdown _ -> "Countdown"
     Play -> "Play"
     Replay -> "Replay"
 
@@ -89,30 +112,32 @@ loading : Html Msg
 loading =
   H.div [ A.class "Loading" ]
     [ H.h3 [ A.class "u-textCenter" ] [ H.text "Loading..." ]
-    , buttonGroup [ button Title "Next" ]
+    , buttonGroup [ button (UpdateView Title) "Next" ]
     ]
 
 title : Html Msg
 title =
   H.div [ A.class "Title" ]
     [ H.h1 [ A.class "u-textCenter" ] [ H.text "Pop!" ]
-    , buttonGroup [ button Countdown "Play" ]
+    , buttonGroup [ button (UpdateView initCountdown) "Play" ]
     ]
 
-countdown : Int -> Html Msg
+countdown : Time -> Html Msg
 countdown timeLeft =
-  H.div [ A.class "Countdown" ]
-    [ H.h2 [ A.class "u-textCenter" ] [ H.text "Get ready!" ]
-    , H.h3 [ A.class "Countdown-time u-textCenter" ] [ H.text (toString timeLeft) ]
-    , buttonGroup [ button Play "Next" ]
-    ]
+  let
+    time = timeLeft / 1000 |> ceiling |> toString
+  in
+    H.div [ A.class "Countdown" ]
+      [ H.h2 [ A.class "u-textCenter" ] [ H.text "Get ready!" ]
+      , H.h3 [ A.class "Countdown-time u-textCenter" ] [ H.text time ]
+      ]
 
 play : Int -> Int -> Html Msg
 play timeLeft score =
   H.div [ A.class "Play" ]
     [ H.h3 [ A.class "Play-time u-textCenter" ] [ H.text (toString timeLeft) ]
     , H.h3 [ A.class "Play-score u-textCenter" ] [ H.text (toString score) ]
-    , buttonGroup [ button Replay "Next" ]
+    , buttonGroup [ button (UpdateView Replay) "Next" ]
     ]
 
 replay : Int -> Html Msg
@@ -121,8 +146,8 @@ replay score =
     [ H.h2 [ A.class "u-textCenter" ] [ H.text "Time's Up!"]
     , H.p [ A.class "u-textCenter" ] [ H.text ("You scored " ++ (toString score) ++ " points!") ]
     , buttonGroup
-        [ button Countdown "Replay"
-        , button Title "Menu"
+        [ button (UpdateView initCountdown) "Replay"
+        , button (UpdateView Title) "Menu"
         ]
     ]
 
@@ -131,7 +156,7 @@ viewToHtml view =
   case view of
     Loading -> loading
     Title -> title
-    Countdown -> countdown 5
+    Countdown timeLeft -> countdown timeLeft
     Play -> play 10 5
     Replay -> replay 5
 
