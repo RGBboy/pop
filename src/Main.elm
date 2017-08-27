@@ -50,25 +50,25 @@ update message model =
         Countdown timeLeft ->
           let
             time = timeLeft - delta
-            view =
+            newModel =
               if time > 0 then
                 Countdown time
               else
                 initPlay
           in
-            ( view
+            ( newModel
             , Cmd.none
             )
         Play timeLeft ->
           let
             time = timeLeft - delta
-            view =
+            newModel =
               if time > 0 then
                 Play time
               else
                 Replay
           in
-            ( view
+            ( newModel
             , Cmd.none
             )
         _ -> (model, Cmd.none)
