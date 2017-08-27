@@ -16,7 +16,7 @@ type View
   = Loading
   | Title
   | Countdown Time
-  | Play
+  | Play Time
   | Replay
 
 type alias Model =
@@ -32,6 +32,9 @@ init =
 
 initCountdown : View
 initCountdown = Countdown (3 * Time.second)
+
+initPlay : View
+initPlay = Play (3 * Time.second)
 
 
 
@@ -50,14 +53,26 @@ update message model =
       )
     Tick delta ->
       case model.view of
-        Countdown timeleft ->
+        Countdown timeLeft ->
           let
-            time = timeleft - delta
+            time = timeLeft - delta
             view =
               if time > 0 then
                 Countdown time
               else
-                Play
+                initPlay
+          in
+            ( { model | view = view}
+            , Cmd.none
+            )
+        Play timeLeft ->
+          let
+            time = timeLeft - delta
+            view =
+              if time > 0 then
+                Play time
+              else
+                Replay
           in
             ( { model | view = view}
             , Cmd.none
@@ -82,7 +97,7 @@ viewToString view =
     Loading -> "Loading"
     Title -> "Title"
     Countdown _ -> "Countdown"
-    Play -> "Play"
+    Play _ -> "Play"
     Replay -> "Replay"
 
 app : View -> List (Html msg) -> Html msg
@@ -131,13 +146,15 @@ countdown timeLeft =
       , H.h3 [ A.class "Countdown-time u-textCenter" ] [ H.text time ]
       ]
 
-play : Int -> Int -> Html Msg
+play : Time -> Int -> Html msg
 play timeLeft score =
-  H.div [ A.class "Play" ]
-    [ H.h3 [ A.class "Play-time u-textCenter" ] [ H.text (toString timeLeft) ]
-    , H.h3 [ A.class "Play-score u-textCenter" ] [ H.text (toString score) ]
-    , buttonGroup [ button (UpdateView Replay) "Next" ]
-    ]
+  let
+    time = timeLeft / 1000 |> ceiling |> toString
+  in
+    H.div [ A.class "Play" ]
+      [ H.h3 [ A.class "Play-time u-textCenter" ] [ H.text time ]
+      , H.h3 [ A.class "Play-score u-textCenter" ] [ H.text (toString score) ]
+      ]
 
 replay : Int -> Html Msg
 replay score =
@@ -156,7 +173,7 @@ viewToHtml view =
     Loading -> loading
     Title -> title
     Countdown timeLeft -> countdown timeLeft
-    Play -> play 10 5
+    Play timeLeft -> play timeLeft 5
     Replay -> replay 5
 
 view : Model -> Html Msg
