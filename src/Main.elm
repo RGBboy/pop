@@ -4,6 +4,7 @@ import AnimationFrame
 import Html as H exposing (Html)
 import Html.Attributes as A
 import Html.Events as E
+import Pop
 import Task exposing (Task)
 import Time exposing (Time)
 
@@ -11,65 +12,69 @@ import Time exposing (Time)
 
 -- MODEL
 
-type Model
+type State
   = Loading
   | Title
   | Countdown Time
-  | Play Time
+  | Play Pop.Model
   | Replay
+
+type alias Model =
+  { lastTick : Maybe Time
+  , state : State
+  }
 
 init : (Model, Cmd Msg)
 init =
-  ( Loading
+  ( { lastTick = Nothing, state = Loading }
   , Task.perform identity (Task.succeed (UpdateState Title))
   )
 
-initCountdown : Model
+initCountdown : State
 initCountdown = Countdown (3 * Time.second)
 
-initPlay : Model
-initPlay = Play (3 * Time.second)
+initPlay : State
+initPlay = Play Pop.init
 
 
 
 -- UPDATE
 
 type Msg
-  = UpdateState Model
+  = UpdateState State
   | Tick Time
 
-update : Msg -> Model -> (Model, Cmd msg)
+update : Msg -> Model -> (Model, Cmd Msg)
 update message model =
   case message of
-    UpdateState model ->
-      ( model
+    UpdateState state ->
+      ( { model | state = state }
       , Cmd.none
       )
-    Tick delta ->
-      case model of
+    Tick time ->
+      case model.state of
         Countdown timeLeft ->
           let
-            time = timeLeft - delta
-            newModel =
-              if time > 0 then
-                Countdown time
+            delta = Maybe.map ((-) time) model.lastTick
+              |> Maybe.withDefault 0
+            countdown = timeLeft - delta
+            newState =
+              if countdown > 0 then
+                Countdown countdown
               else
                 initPlay
           in
-            ( newModel
+            ( { model | lastTick = Just time, state = newState }
             , Cmd.none
             )
-        Play timeLeft ->
+        Play pop ->
           let
-            time = timeLeft - delta
-            newModel =
-              if time > 0 then
-                Play time
-              else
-                Replay
+            delta = Maybe.map ((-) time) model.lastTick
+              |> Maybe.withDefault 0
+            (newPop, command) = Pop.update (UpdateState Replay) (Pop.Tick time delta) pop
           in
-            ( newModel
-            , Cmd.none
+            ( { model | lastTick = Just time, state = Play newPop }
+            , command
             )
         _ -> (model, Cmd.none)
 
@@ -79,7 +84,7 @@ update message model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-  AnimationFrame.diffs Tick
+  AnimationFrame.times Tick
 
 
 
@@ -125,16 +130,6 @@ countdown timeLeft =
       , H.h3 [ A.class "Countdown-time u-textCenter" ] [ H.text time ]
       ]
 
-play : Time -> Int -> Html msg
-play timeLeft score =
-  let
-    time = timeLeft / 1000 |> ceiling |> toString
-  in
-    H.div [ A.class "Play" ]
-      [ H.h3 [ A.class "Play-time u-textCenter" ] [ H.text time ]
-      , H.h3 [ A.class "Play-score u-textCenter" ] [ H.text (toString score) ]
-      ]
-
 replay : Int -> Html Msg
 replay score =
   H.div [ A.class "Replay" ]
@@ -150,11 +145,11 @@ view : Model -> Html Msg
 view model =
   let
     content =
-      case model of
+      case model.state of
         Loading -> loading
         Title -> title
         Countdown timeLeft -> countdown timeLeft
-        Play timeLeft -> play timeLeft 5
+        Play pop -> Pop.view pop
         Replay -> replay 5
   in
     app content
